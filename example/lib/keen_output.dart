@@ -6,7 +6,6 @@ class KeenOutput extends BufferedOutput {
   }) : super(
           tagPattern: tagPattern,
           logStorage: FileLogStorage(),
-          flushInterval: 2000,
         );
 
   Future<bool> write(List<Log> logs) async {
