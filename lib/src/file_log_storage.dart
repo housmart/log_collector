@@ -58,7 +58,6 @@ class FileLogStorage extends LogStorage {
 
   Future _save(List<Log> logs, String storageHash) async {
     final file = await _localFile(storageHash);
-    print('save: ${logs.length}');
     file.writeAsStringSync(Log.jsonStringFromLogs(logs));
     return;
   }
