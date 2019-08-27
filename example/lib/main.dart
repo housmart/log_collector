@@ -1,54 +1,65 @@
 import 'package:flutter/material.dart';
 import 'package:log_collector/log_collector.dart';
-import 'package:provider/provider.dart';
 
-import 'EventFilter.dart';
+import 'event_filter.dart';
 import 'ga_event_output.dart';
-import 'ga_screen_output.dart';
-import 'keen_output.dart';
-import 'my_home_page.dart';
+import 'my_log_output.dart';
+import 'print_output.dart';
+import 'normal_filter.dart';
 
 void main() => runApp(MyApp());
+
+final logger = Logger(
+  filters: [
+    EventFilter(tagPattern: 'event'),
+    NormalFilter(tagPattern: 'my.*'),
+  ],
+  outputs: [
+    PrintOutput(tagPattern: '**'),
+    MyLogOutput(tagPattern: 'my.*'),
+    GAEventOutput(tagPattern: 'ga.event'),
+  ],
+);
 
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Provider<Logger>(
-      builder: (_) => Logger(
-        filters: [
-          StandardFilter(
-            tagPattern: 'screen',
-            onTransform: (log) {
-              return [
-                Log(
-                  payload: log.payload,
-                  tag: 'ga.screen',
-                  loggedAt: log.loggedAt,
-                ),
-                Log(
-                  payload: Map.of(log.payload)..['type'] = 'screen',
-                  tag: 'keen.screen',
-                  loggedAt: log.loggedAt,
-                ),
-              ];
-            },
+    return MaterialApp(
+      home: Scaffold(
+        appBar: AppBar(title: Text('Log Collector Demo')),
+        body: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              RaisedButton(
+                child: Text('event'),
+                onPressed: () {
+                  logger.post({
+                    'action': 'click_event_button',
+                  }, tag: 'event');
+                },
+              ),
+              SizedBox(height: 16),
+              RaisedButton(
+                child: Text('conversion'),
+                onPressed: () {
+                  logger.post({
+                    'action': 'click_conversion_button',
+                  }, tag: 'my.conversion');
+                },
+              ),
+              SizedBox(height: 16),
+              RaisedButton(
+                child: Text('other'),
+                onPressed: () {
+                  logger.post({
+                    'action': 'click_other_button',
+                  }, tag: 'other');
+                },
+              ),
+            ],
           ),
-          EventFilter(tagPattern: 'event'),
-        ],
-        outputs: [
-          PrintOutput(tagPattern: '**'),
-          GAScreenOutput(tagPattern: 'ga.screen'),
-          GAEventOutput(tagPattern: 'ga.event'),
-          KeenOutput(tagPattern: 'keen.*'),
-        ],
-      ),
-      dispose: (_, logger) => logger.dispose(),
-      child: MaterialApp(
-        title: 'Log Collector Demo',
-        theme: ThemeData(
-          primarySwatch: Colors.blue,
         ),
-        home: MyHomePage(title: 'Log Collector Demo'),
       ),
     );
   }

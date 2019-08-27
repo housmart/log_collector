@@ -16,7 +16,7 @@ class BufferedOutput extends Output {
   Timer _timer;
   final _buffer = List<Log>();
   final _chunks = List<BufferChunk>();
-  final _lock = Lock(reentrant: true);
+  final _lock = Lock();
 
   BufferedOutput({
     @required tagPattern,
@@ -37,10 +37,8 @@ class BufferedOutput extends Output {
   }
 
   void resume() async {
-    await _lock.synchronized(() async {
-      _reloadLogStorage();
-      _flush();
-    });
+    _reloadLogStorage();
+    _flush();
     _startTimer();
   }
 
@@ -50,11 +48,8 @@ class BufferedOutput extends Output {
 
   void _startTimer() {
     _stopTimer();
-    _timer =
-        Timer.periodic(Duration(milliseconds: flushInterval), (timer) async {
-      await _lock.synchronized(() async {
-        _flush();
-      });
+    _timer = Timer.periodic(Duration(milliseconds: flushInterval), (timer) {
+      _flush();
     });
   }
 
@@ -66,11 +61,11 @@ class BufferedOutput extends Output {
   void emit(Log log) async {
     await _lock.synchronized(() async {
       _buffer.add(log);
-      _logStorage.add([log], storageName);
-      if (_buffer.length >= logCountLimit) {
-        _flush();
-      }
     });
+    _logStorage.add([log], storageHash);
+    if (_buffer.length >= logCountLimit) {
+      _flush();
+    }
   }
 
   void _flush() async {
@@ -78,23 +73,28 @@ class BufferedOutput extends Output {
       return;
     }
     List<Log> logs;
-    if (logCountLimit < _buffer.length) {
-      logs = _buffer.sublist(0, logCountLimit);
-      _buffer.removeRange(0, logCountLimit);
-    } else {
-      logs = List<Log>.of(_buffer);
-      _buffer.clear();
-    }
+    BufferChunk chunk;
+    await _lock.synchronized(() async {
+      if (logCountLimit < _buffer.length) {
+        logs = _buffer.sublist(0, logCountLimit);
+        _buffer.removeRange(0, logCountLimit);
+      } else {
+        logs = List<Log>.of(_buffer);
+        _buffer.clear();
+      }
+      chunk = BufferChunk(logs);
+      _chunks.add(chunk);
+    });
 
-    final chunk = BufferChunk(logs);
-    _chunks.add(chunk);
     _writeChunk(chunk);
   }
 
   void _writeChunk(BufferChunk chunk) async {
     if (await write(chunk.logs)) {
-      _chunks.remove(chunk);
-      _logStorage.remove(chunk.logs, storageName);
+      await _lock.synchronized(() async {
+        _chunks.remove(chunk);
+      });
+      _logStorage.remove(chunk.logs, storageHash);
     } else {
       chunk.retryCount++;
       if (chunk.retryCount <= retryLimit) {
@@ -107,17 +107,20 @@ class BufferedOutput extends Output {
     }
   }
 
-  String get storageName => '${tagPattern.pattern}_${this.runtimeType}';
+  String get storageHash =>
+      '${this.runtimeType.hashCode}_${tagPattern.pattern.hashCode}';
 
   Future _reloadLogStorage() async {
-    _buffer.clear();
-    final logs = await _logStorage.retrieveLogs(storageName);
+    final logs = await _logStorage.retrieveLogs(storageHash);
     final filteredLogs = logs.where((log) {
       return _chunks.firstWhere((chunk) => chunk.logs.contains(log),
               orElse: () => null) ==
           null;
     });
-    _buffer.addAll(filteredLogs);
+    await _lock.synchronized(() async {
+      _buffer.clear();
+      _buffer.addAll(filteredLogs);
+    });
 
     return null;
   }

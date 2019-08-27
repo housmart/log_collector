@@ -10,7 +10,6 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  crypto: ^2.1.2
   path_provider: ^1.2.0
   synchronized: ^2.1.0+1
 

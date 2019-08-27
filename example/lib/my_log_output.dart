@@ -1,7 +1,7 @@
 import 'package:log_collector/log_collector.dart';
 
-class GAScreenOutput extends BufferedOutput {
-  GAScreenOutput({
+class MyLogOutput extends BufferedOutput {
+  MyLogOutput({
     tagPattern,
   }) : super(
           tagPattern: tagPattern,
@@ -9,9 +9,10 @@ class GAScreenOutput extends BufferedOutput {
         );
 
   Future<bool> write(List<Log> logs) async {
+    // send log to your web server
     return Future<bool>.delayed(Duration(milliseconds: 50), () {
       logs.forEach((log) {
-        print('[GAScreen] ${log.loggedAt}:[${log.tag}] ${log.payload}');
+        print('[MyLog] ${log.loggedAt}:[${log.tag}] ${log.payload}');
       });
       return true;
     });

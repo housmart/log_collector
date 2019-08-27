@@ -59,9 +59,7 @@ class Logger {
   }
 
   void _start() {
-    Timer.run(() {
-      _outputs.forEach((output) => output.start());
-    });
+    _outputs.forEach((output) => output.start());
   }
 
   void suspend() {

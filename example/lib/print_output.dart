@@ -1,7 +1,5 @@
 import 'package:flutter/foundation.dart';
-
-import 'log.dart';
-import 'output.dart';
+import 'package:log_collector/log_collector.dart';
 
 class PrintOutput extends Output {
   PrintOutput({
