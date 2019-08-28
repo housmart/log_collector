@@ -1,4 +1,6 @@
 
+[![pub package](https://img.shields.io/pub/v/log_collector.svg)](https://pub.dartlang.org/packages/log_collector)
+
 # Dart Log Collector
 
 Provides log filtering, buffering, and retry.
