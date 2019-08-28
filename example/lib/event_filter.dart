@@ -5,17 +5,16 @@ class EventFilter extends Filter {
 
   @override
   List<Log> transform(Log log) {
-    return [
-      Log(
-        payload: log.payload,
-        tag: 'ga.event',
-        loggedAt: log.loggedAt,
-      ),
-      Log(
-        payload: Map.of(log.payload)..['type'] = 'event',
-        tag: 'my.event',
-        loggedAt: log.loggedAt,
-      ),
-    ];
+    if (log.payload['action'] == null) {
+      return [];
+    } else {
+      return [
+        log.copyWith(tag: 'ga.event'),
+        log.copyWith(
+          payload: Map.of(log.payload)..['type'] = 'event',
+          tag: 'my.event',
+        ),
+      ];
+    }
   }
 }

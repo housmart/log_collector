@@ -50,11 +50,11 @@ class MyApp extends StatelessWidget {
               ),
               SizedBox(height: 16),
               RaisedButton(
-                child: Text('other'),
+                child: Text('ignore'),
                 onPressed: () {
                   logger.post({
-                    'action': 'click_other_button',
-                  }, tag: 'other');
+                    'action': 'click_ignore_button',
+                  }, tag: 'foo');
                 },
               ),
             ],
