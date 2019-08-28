@@ -1,7 +1,7 @@
 
-[![pub package](https://img.shields.io/pub/v/log_collector.svg)](https://pub.dartlang.org/packages/log_collector)
-
 # Dart Log Collector
+
+[![pub package](https://img.shields.io/pub/v/log_collector.svg)](https://pub.dartlang.org/packages/log_collector)
 
 Provides log filtering, buffering, and retry.
 
@@ -9,11 +9,12 @@ Inspired by [cookpad/Puree-Swift](https://github.com/cookpad/Puree-Swift).
 
 # Usage
 
-## Define your own Filter/Output
+### Define your own Filter/Output
 
 #### Filter
 
 `Filter` converts `Log` to `List<Log>`.
+
 You can increase the log, transform it, or empty it.
 
 ```dart
@@ -40,6 +41,7 @@ class EventFilter extends Filter {
 #### Output
 
 `Output` does not provide buffering and retrying.
+
 The following `PrintOutput` will output logs to the console.
 
 ```dart
@@ -84,7 +86,7 @@ class MyLogOutput extends BufferedOutput {
 }
 ```
 
-## Make logger
+### Make logger
 
 Only `Filter` and `Output` that match `TagPattern` are used.
 
@@ -102,14 +104,16 @@ final logger = Logger(
 );
 ```
 
-## Post log
+### Post log
+
 
 ```dart
 logger.post({'action': 'click_event_button'}, tag: 'event');
 logger.post({'action': 'click_conversion_button'}, tag: 'my.conversion');
 ```
 
-## TagPattern matching.
+### TagPattern matching.
+
 
 ```dart
 expect(TagPattern('aa.bb.cc').match('aa.bb.cc'), true);
