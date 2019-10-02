@@ -1,14 +1,20 @@
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
+
 class Log {
-  final Map<String, dynamic> payload;
+  final Map<String, Object> payload;
   final String tag;
   final DateTime loggedAt;
 
-  Log({this.payload, this.tag, this.loggedAt});
+  Log({
+    @required this.payload,
+    @required this.tag,
+    @required DateTime loggedAt,
+  }) : loggedAt = loggedAt ?? DateTime.now();
 
   Log copyWith({
-    Map<String, dynamic> payload,
+    Map<String, Object> payload,
     String tag,
     DateTime loggedAt,
   }) {
@@ -26,7 +32,7 @@ class Log {
 
   factory Log.fromMap(Map map) {
     return Log(
-      payload: (map['payload'] as Map).cast<String, dynamic>(),
+      payload: (map['payload'] as Map).cast<String, Object>(),
       tag: map['tag'] as String,
       loggedAt: DateTime.fromMillisecondsSinceEpoch(map['loggedAt'] as int),
     );

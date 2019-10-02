@@ -48,7 +48,7 @@ class Logger {
     });
   }
 
-  void post(Map<String, dynamic> payload, {String tag}) {
+  void post(Map<String, Object> payload, {String tag}) {
     _streamController.sink.add(
       Log(
         payload: payload,
