@@ -2,7 +2,7 @@ name: log_collector
 description: Provides log filtering, buffering, and retry.
 author: Ryo Miyake / Housmart Inc. <ryo.miyake@housmart.com>
 homepage: https://github.com/housmart/log_collector
-version: 1.0.1
+version: 1.0.2
 
 environment:
   sdk: ">=2.1.0 <3.0.0"
