@@ -2,10 +2,10 @@ import 'package:log_collector/log_collector.dart';
 
 class MyLogOutput extends BufferedOutput {
   MyLogOutput({
-    tagPattern,
-    flushInterval = 100,
-    retryLimit = 3,
-    logCountLimit = 5,
+    String tagPattern,
+    int flushInterval = 100,
+    int retryLimit = 3,
+    int logCountLimit = 5,
   }) : super(
             tagPattern: tagPattern,
             logStorage: FileLogStorage(),
@@ -17,7 +17,9 @@ class MyLogOutput extends BufferedOutput {
     // TODO: send logs to your server.
     return Future<bool>.delayed(Duration(milliseconds: 50), () {
       logs.forEach((log) {
-        print('[MyLog] ${log.loggedAt}:[${log.tag}] ${log.payload}');
+        final eventName = log.payload['event_name'];
+        final properties = log.payload['properties'];
+        print('🥝[MyLog] ${log.loggedAt}:[$eventName] $properties');
       });
       // if return false, retrying.
       return true;

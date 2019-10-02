@@ -18,19 +18,31 @@ Inspired by [cookpad/Puree-Swift](https://github.com/cookpad/Puree-Swift).
 You can increase the log, transform it, or empty it.
 
 ```dart
-class EventFilter extends Filter {
-  EventFilter({tagPattern}) : super(tagPattern: tagPattern);
+class ActionFilter extends Filter {
+  ActionFilter({String tagPattern}) : super(tagPattern: tagPattern);
 
   @override
   List<Log> transform(Log log) {
-    if (log.payload['action'] == null) {
+    final target = log.payload['target'];
+    final type = log.payload['type'];
+    if (target is! String || type is! String) {
       return [];
     } else {
+      final properties = Map.of(log.payload)..remove('type');
       return [
-        log.copyWith(tag: 'ga.event'),
         log.copyWith(
-          payload: Map.of(log.payload)..['type'] = 'event',
-          tag: 'my.event',
+          tag: 'ga.action',
+          payload: {
+            'event_name': type,
+            'properties': properties,
+          },
+        ),
+        log.copyWith(
+          tag: 'my.action',
+          payload: {
+            'event_name': '${type}_$target',
+            'properties': Map.of(properties)..remove('target'),
+          },
         ),
       ];
     }
@@ -46,7 +58,7 @@ The following `PrintOutput` will output logs to the console.
 
 ```dart
 class PrintOutput extends Output {
-  PrintOutput({tagPattern}) : super(tagPattern: tagPattern);
+  PrintOutput({String tagPattern}) : super(tagPattern: tagPattern);
 
   @override
   void emit(Log log) {
@@ -62,10 +74,10 @@ class PrintOutput extends Output {
 ```dart
 class MyLogOutput extends BufferedOutput {
   MyLogOutput({
-    tagPattern,
-    flushInterval = 100,
-    retryLimit = 3,
-    logCountLimit = 5,
+    String tagPattern,
+    int flushInterval = 100,
+    int retryLimit = 3,
+    int logCountLimit = 5,
   }) : super(
             tagPattern: tagPattern,
             logStorage: FileLogStorage(),
@@ -77,7 +89,9 @@ class MyLogOutput extends BufferedOutput {
     // TODO: send logs to your server.
     return Future<bool>.delayed(Duration(milliseconds: 50), () {
       logs.forEach((log) {
-        print('[MyLog] ${log.loggedAt}:[${log.tag}] ${log.payload}');
+        final eventName = log.payload['event_name'];
+        final properties = log.payload['properties'];
+        print('🥝[MyLog] ${log.loggedAt}:[$eventName] $properties');
       });
       // if return false, retrying.
       return true;
@@ -93,13 +107,13 @@ Only `Filter` and `Output` that match `TagPattern` are used.
 ```dart
 final logger = Logger(
   filters: [
-    EventFilter(tagPattern: 'event'),
-    NormalFilter(tagPattern: 'my.*'),
+    PageViewFilter(tagPattern: 'page'),
+    ActionFilter(tagPattern: 'action'),
   ],
   outputs: [
     PrintOutput(tagPattern: '**'),
-    MyLogOutput(tagPattern: 'my.*'),
-    GAEventOutput(tagPattern: 'ga.event'),
+    MyLogOutput(tagPattern: 'my.**'),
+    AnalyticsOutput(tagPattern: 'ga.**'),
   ],
 );
 ```
@@ -108,8 +122,8 @@ final logger = Logger(
 
 
 ```dart
-logger.post({'action': 'click_event_button'}, tag: 'event');
-logger.post({'action': 'click_conversion_button'}, tag: 'my.conversion');
+logger.post({'name': 'page1'}, tag: 'page_view');
+logger.post({'type': 'click', 'target': 'event_button'}, tag: 'action');
 ```
 
 ### TagPattern matching.
