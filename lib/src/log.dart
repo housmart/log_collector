@@ -52,7 +52,11 @@ class Log {
   }
 
   static List<Log> logsFromJsonString(String jsonString) {
-    final array = json.decode(jsonString) as List;
-    return array.cast<Map>().map((map) => Log.fromMap(map)).toList();
+    try {
+      final array = json.decode(jsonString) as List;
+      return array.cast<Map>().map((map) => Log.fromMap(map)).toList();
+    } on Exception catch (_) {
+      return [];
+    }
   }
 }
