@@ -1,3 +1,7 @@
+## [1.0.3]
+
+* Ignore FormatException
+
 ## [1.0.2]
 
 * Simplyrfid paramater type
