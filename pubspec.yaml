@@ -1,8 +1,8 @@
 name: log_collector
 description: Provides log filtering, buffering, and retry.
-author: Ryo Miyake / Housmart Inc. <ryo.miyake@housmart.com>
-homepage: https://github.com/housmart/log_collector
-version: 1.0.3
+author: Ryo Miyake <ryo@miyake.id>
+homepage: https://github.com/miyakeryo/log_collector
+version: 1.0.4
 
 environment:
   sdk: ">=2.1.0 <3.0.0"
@@ -10,8 +10,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  path_provider: ^1.2.0
-  synchronized: ^2.1.0+1
+  path_provider: ^1.6.5
+  synchronized: ^2.2.0
 
 dev_dependencies:
   flutter_test:

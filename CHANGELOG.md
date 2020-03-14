@@ -1,10 +1,14 @@
+## [1.0.4]
+
+* Update pubspec.yaml
+
 ## [1.0.3]
 
 * Ignore FormatException
 
 ## [1.0.2]
 
-* Simplyrfid paramater type
+* Simplified parameter type
 * Update example
 
 ## [1.0.1]
