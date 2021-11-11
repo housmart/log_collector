@@ -1,22 +1,20 @@
 import 'dart:convert';
 
-import 'package:flutter/foundation.dart';
-
 class Log {
   final Map<String, Object> payload;
   final String tag;
   final DateTime loggedAt;
 
   Log({
-    @required this.payload,
-    @required this.tag,
-    @required DateTime loggedAt,
+    required this.payload,
+    required this.tag,
+    required DateTime loggedAt,
   }) : loggedAt = loggedAt;
 
   Log copyWith({
-    Map<String, Object> payload,
-    String tag,
-    DateTime loggedAt,
+    Map<String, Object>? payload,
+    String? tag,
+    DateTime? loggedAt,
   }) {
     return Log(
       payload: payload ?? this.payload,

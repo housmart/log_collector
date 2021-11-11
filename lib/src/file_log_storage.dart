@@ -21,7 +21,7 @@ class FileLogStorage extends LogStorage {
   }
 
   Future<List<Log>> retrieveLogs(String storageHash) async {
-    List<Log> storedLogs;
+    late List<Log> storedLogs;
     final file = await _localFile(storageHash);
     if (await file.exists()) {
       String contents = await file.readAsString();

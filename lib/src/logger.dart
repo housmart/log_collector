@@ -1,7 +1,5 @@
 import 'dart:async';
 
-import 'package:flutter/foundation.dart';
-
 import 'filter.dart';
 import 'log.dart';
 import 'output.dart';
@@ -10,7 +8,7 @@ class Logger {
   final _streamController = StreamController<Log>.broadcast();
   final List<Output> _outputs;
 
-  Logger({List<Filter> filters, @required List<Output> outputs})
+  Logger({List<Filter>? filters, required List<Output> outputs})
       : _outputs = outputs {
     if (filters != null && filters.length > 0) {
       filters.forEach((filter) {
@@ -47,7 +45,7 @@ class Logger {
     });
   }
 
-  void post(Map<String, Object> payload, {@required String tag}) {
+  void post(Map<String, Object> payload, {required String tag}) {
     _streamController.sink.add(
       Log(
         payload: payload,

@@ -1,5 +1,3 @@
-import 'package:flutter/foundation.dart';
-
 import 'log.dart';
 import 'tag_pattern.dart';
 
@@ -7,7 +5,7 @@ abstract class Output {
   final TagPattern tagPattern;
 
   Output({
-    @required String tagPattern,
+    required String tagPattern,
   }) : this.tagPattern = TagPattern(tagPattern);
 
   bool where(Log log) {
