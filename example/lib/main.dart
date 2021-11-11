@@ -1,10 +1,10 @@
-import 'package:example/pageview_filter.dart';
 import 'package:flutter/material.dart';
 import 'package:log_collector/log_collector.dart';
 
 import 'action_filter.dart';
 import 'analytics_output.dart';
 import 'my_log_output.dart';
+import 'pageview_filter.dart';
 import 'print_output.dart';
 
 void main() => runApp(MyApp());

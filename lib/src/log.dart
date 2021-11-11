@@ -11,7 +11,7 @@ class Log {
     @required this.payload,
     @required this.tag,
     @required DateTime loggedAt,
-  }) : loggedAt = loggedAt ?? DateTime.now();
+  }) : loggedAt = loggedAt;
 
   Log copyWith({
     Map<String, Object> payload,

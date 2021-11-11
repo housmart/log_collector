@@ -8,16 +8,18 @@ abstract class Output {
 
   Output({
     @required String tagPattern,
-  })  : assert(tagPattern != null),
-        this.tagPattern = TagPattern(tagPattern);
+  }) : this.tagPattern = TagPattern(tagPattern);
 
   bool where(Log log) {
     return tagPattern.match(log.tag);
   }
 
   void dispose() async {}
+
   void start() {}
+
   void resume() {}
+
   void suspend() {}
 
   void emit(Log log);

@@ -10,7 +10,7 @@ abstract class Filter {
 
   Filter({
     @required String tagPattern,
-  })  : assert(tagPattern != null),
+  })  :
         this.tagPattern = TagPattern(tagPattern);
 
   List<Log> transform(Log log);

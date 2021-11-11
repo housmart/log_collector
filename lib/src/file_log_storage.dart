@@ -1,13 +1,13 @@
 import 'dart:io';
 
-import 'package:log_collector/src/log_storage.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:synchronized/synchronized.dart';
 
 import 'log.dart';
+import 'log_storage.dart';
 
 class FileLogStorage extends LogStorage {
-  final _storedLogs = List<Log>();
+  final _storedLogs = <Log>[];
   final _lock = Lock();
 
   Future<String> get _localPath async {

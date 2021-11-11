@@ -2,11 +2,11 @@ import 'dart:async';
 import 'dart:math';
 
 import 'package:flutter/foundation.dart';
-import 'package:synchronized/synchronized.dart';
 
 import 'log_storage.dart';
 import 'log.dart';
 import 'output.dart';
+import 'package:synchronized/synchronized.dart';
 
 class BufferedOutput extends Output {
   final LogStorage _logStorage;
@@ -14,8 +14,8 @@ class BufferedOutput extends Output {
   final int retryLimit;
   final int logCountLimit;
   Timer _timer;
-  final _buffer = List<Log>();
-  final _chunks = List<BufferChunk>();
+  final _buffer = <Log>[];
+  final _chunks = <BufferChunk>[];
   final _lock = Lock();
 
   BufferedOutput({
@@ -113,7 +113,7 @@ class BufferedOutput extends Output {
   Future _reloadLogStorage() async {
     final logs = await _logStorage.retrieveLogs(storageHash);
     final filteredLogs = logs.where((log) {
-      return _chunks.firstWhere((chunk) => chunk.logs.contains(log),
+      return _chunks.firstWhere((chunk) => chunk.logs.contains(log) == true,
               orElse: () => null) ==
           null;
     });
@@ -137,7 +137,7 @@ class BufferChunk {
   BufferChunk(this.logs);
 
   int get retryMillisecondsDelay {
-    return 2 * pow(2, retryCount - 1);
+    return 2 * pow(2, retryCount - 1).toInt();
   }
 
   @override

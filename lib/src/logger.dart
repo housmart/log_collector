@@ -11,8 +11,7 @@ class Logger {
   final List<Output> _outputs;
 
   Logger({List<Filter> filters, @required List<Output> outputs})
-      : assert(outputs != null),
-        _outputs = outputs {
+      : _outputs = outputs {
     if (filters != null && filters.length > 0) {
       filters.forEach((filter) {
         _streamController.stream
@@ -48,7 +47,7 @@ class Logger {
     });
   }
 
-  void post(Map<String, Object> payload, {String tag}) {
+  void post(Map<String, Object> payload, {@required String tag}) {
     _streamController.sink.add(
       Log(
         payload: payload,
