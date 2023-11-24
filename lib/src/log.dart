@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 class Log {
-  final Map<String, Object> payload;
+  final Map<String, dynamic> payload;
   final String tag;
   final DateTime loggedAt;
 
@@ -12,7 +12,7 @@ class Log {
   }) : loggedAt = loggedAt;
 
   Log copyWith({
-    Map<String, Object>? payload,
+    Map<String, dynamic>? payload,
     String? tag,
     DateTime? loggedAt,
   }) {
