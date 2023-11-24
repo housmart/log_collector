@@ -1,10 +1,12 @@
 import 'dart:async';
 import 'dart:math';
 
-import 'log_storage.dart';
-import 'log.dart';
-import 'output.dart';
+import 'package:collection/collection.dart';
 import 'package:synchronized/synchronized.dart';
+
+import 'log.dart';
+import 'log_storage.dart';
+import 'output.dart';
 
 class BufferedOutput extends Output {
   final LogStorage _logStorage;
@@ -112,9 +114,8 @@ class BufferedOutput extends Output {
     final logs = await _logStorage.retrieveLogs(storageHash);
     final filteredLogs = logs.where((log) {
       // ignore: unnecessary_cast
-      return (_chunks as List<BufferChunk?>).firstWhere(
+      return (_chunks as List<BufferChunk?>).firstWhereOrNull(
             (chunk) => chunk?.logs.contains(log) == true,
-            orElse: () => null,
           ) ==
           null;
     });
